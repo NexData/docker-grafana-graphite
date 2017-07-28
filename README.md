@@ -72,3 +72,25 @@ from one of our toy applications:
 
 ![Kamon Dashboard](http://kamon.io/assets/img/kamon-statsd-grafana.png)
 ![System Metrics Dashboard](http://kamon.io/assets/img/kamon-system-metrics.png)
+
+### NexData repo details ###
+1) Retrieve the docker login command that you can use to authenticate your Docker client to your registry:
+aws ecr get-login --region eu-west-1
+Note: make sure to see "Login Succeeded" when you run the "docker login -u AWS -p ... -e none http..." command
+
+2) If you are using Windows PowerShell, run the following command instead
+Invoke-Expression -Command (aws ecr get-login --no-include-email --region eu-west-1)
+
+3) Build your Docker image using the following command. For information on building a Docker file from scratch see the instructions here. You can skip this step if your image is already built:
+docker build -t nexdata-grafana .
+
+4) After the build completes, tag your image so you can push the image to this repository:
+docker tag kamon/grafana_graphite:latest 900438843151.dkr.ecr.eu-west-1.amazonaws.com/nexdata-grafana:latest
+
+5) Run the following command to push this image to your newly created AWS repository:
+docker push 900438843151.dkr.ecr.eu-west-1.amazonaws.com/nexdata-grafana:latest
+
+Note: on a linux box you may need compose
+$ curl -L https://github.com/docker/compose/releases/download/1.12.0/docker-compose-`uname -s`-`uname -m` > ./docker-compose
+$ sudo mv ./docker-compose /usr/bin/docker-compose
+$ sudo chmod +x /usr/bin/docker-compose
